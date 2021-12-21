@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Selenium_Framework" parllel="tests" thread-count="3">
+    <test name="ajio_tests">
+        <parameter name ="browserType" value="firefox"/>
+        <classes>
+            <class name ="com.framework.testcases.AjioTest"/>
+        </classes>
+    </test>
+    <test name="redbus_tests">
+        <parameter name ="browserType" value="chrome"/>
+        <classes>
+            <class name ="com.framework.testcases.RedBusTest"/>
+        </classes>
+    </test>
+</suite>
