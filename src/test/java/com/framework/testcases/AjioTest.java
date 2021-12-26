@@ -9,8 +9,10 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.rmi.server.ExportException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AjioTest {
 
@@ -22,8 +24,8 @@ public class AjioTest {
     {
 
         DriverFactory driverFactory = new DriverFactory();
-      //  driver = driverFactory.init_browser("chrome");
-        driver = driverFactory.init_browser_browserStack();
+        driver = driverFactory.init_browser("chrome");
+      //  driver = driverFactory.init_browser_browserStack();
     }
 
     @Test()
@@ -58,6 +60,43 @@ public class AjioTest {
         System.out.println("Lowest amount in list : "+min);
 
     }
+
+
+    @Test
+    public void openShirtNewWindow()
+    {
+        driver.get("https://www.ajio.com");
+        HomePage homePage = new HomePage(driver);
+        homePage.clickOnSearch();
+        homePage.clickOnShirts();
+
+        String parentWindow = driver.getWindowHandle();
+
+
+        homePage.clickOnFirstShirt();
+        String childWindow = driver.getWindowHandle();
+
+        driver.switchTo().window(parentWindow);
+        homePage.clickOnSecondShirt();
+
+
+        Set<String> allWindow = driver.getWindowHandles();
+        Iterator<String> it = allWindow.iterator();
+
+        while (it.hasNext())
+        {
+            String nextWindow = it.next();
+
+           if(nextWindow.equalsIgnoreCase(childWindow))
+           {
+               System.out.println("you are in one");
+               driver.switchTo().window(nextWindow);
+           }
+        }
+        driver.switchTo().window(parentWindow);
+    }
+
+
 
     public int getIntFromString(String input)
     {

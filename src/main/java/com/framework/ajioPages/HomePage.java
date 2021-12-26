@@ -29,6 +29,12 @@ public class HomePage {
     @FindBy(className = "offer-pricess")
     private static List<WebElement> offerPrices;
 
+    @FindBy(xpath = "//div[@class='items']//div[contains(@class,'products-list__item ite')][1]")
+    private static WebElement firstShrit;
+
+    @FindBy(xpath = "//div[@class='items']//div[contains(@class,'products-list__item ite')][2]")
+    private static WebElement secondShirt;
+
 
     public HomePage(WebDriver driver)
     {
@@ -66,5 +72,14 @@ public class HomePage {
 
     public List<WebElement> getListOfferPrice() {
         return offerPrices;
+    }
+
+    public void clickOnFirstShirt()
+    {
+        firstShrit.click();
+    }
+
+    public void clickOnSecondShirt() {
+        secondShirt.click();
     }
 }
