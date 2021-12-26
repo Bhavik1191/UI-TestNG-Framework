@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="Selenium_Framework" parllel="tests" thread-count="3">
     <test name="ajio_tests">
-        <parameter name ="browserType" value="firefox"/>
+        <parameters>
+            <parameter name ="browserType" value="firefox"/>
+        </parameters>
         <classes>
             <class name ="com.framework.testcases.AjioTest"/>
         </classes>

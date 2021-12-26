@@ -2,38 +2,81 @@ package com.framework.testcases;
 
 
 import com.framework.DriverFactory;
+import com.framework.ajioPages.HomePage;
 import org.openqa.selenium.WebDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
+
+import java.rmi.server.ExportException;
+import java.util.List;
+import java.util.Map;
 
 public class AjioTest {
 
     public static WebDriver driver;
 
-    @Parameters("browserType")
+  //  @Parameters({"browserType"})
     @BeforeTest
-    public void start(String browserType)
+    public void start()
     {
 
         DriverFactory driverFactory = new DriverFactory();
-        driver = driverFactory.init_browser(browserType);
-    }
-
-    @DataProvider(name = "test Data")
-    public Object[][] testData()
-    {
-        return new Object[][]{{"test date 1"},{"test data 2"}};
+      //  driver = driverFactory.init_browser("chrome");
+        driver = driverFactory.init_browser_browserStack();
     }
 
     @Test()
     public void SelectMenShirt()
     {
         driver.get("https://www.ajio.com");
-        System.out.println("Print Test data" );
+        HomePage homePage = new HomePage(driver);
+        homePage.clickOnSearch();
+        homePage.clickOnShirts();
+
+
+        homePage.clickOnBoys();
+        homePage.clickOnShirtsCb();
+
+
+        String itemsCountTxt = homePage.getItemsCountTxt();
+        int count = getIntFromString(itemsCountTxt);
+
+        System.out.println("Total shirts found : "+count);
+
+        List<WebElement> offerPriceList = homePage.getListOfferPrice();
+
+        //Assigning maximum integer value
+        int min=2147483647;
+        for (WebElement offerPrice : offerPriceList) {
+
+
+            int price = getIntFromString(offerPrice.getText());
+            min = Math.min(min,price);
+        }
+
+        System.out.println("Lowest amount in list : "+min);
+
+    }
+
+    public int getIntFromString(String input)
+    {
+        String count = "";
+        for (int i = 0; i < input.length(); i++) {
+            try
+            {
+                count = count + Integer.parseInt(input.charAt(i)+"");
+            }
+            catch (Exception e)
+            {
+            }
+        }
+        return Integer.parseInt(count);
     }
 
     @AfterTest
     public void tearDown() {
+        driver.close();
         driver.quit();
     }
 }
