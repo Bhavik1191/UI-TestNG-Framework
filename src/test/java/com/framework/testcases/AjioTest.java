@@ -1,11 +1,20 @@
 package com.framework.testcases;
 
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.framework.DriverFactory;
 import com.framework.ajioPages.HomePage;
 import org.openqa.selenium.WebDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.rmi.server.ExportException;
@@ -18,6 +27,19 @@ public class AjioTest {
 
     public static WebDriver driver;
 
+     ExtentTest test;
+     ExtentReports report;
+
+    @BeforeSuite
+    public void reportSetup()
+    {
+        //report = new ExtentSparkReporter(System.getProperty("user.dir")+"ExtentReportResults.html",true);
+        report = new ExtentReports();
+        ExtentSparkReporter spark = new ExtentSparkReporter("target/Spark.html");
+        report.attachReporter(spark);
+
+    }
+
   //  @Parameters({"browserType"})
     @BeforeTest
     public void start()
@@ -28,9 +50,12 @@ public class AjioTest {
       //  driver = driverFactory.init_browser_browserStack();
     }
 
+
+
     @Test()
     public void SelectMenShirt()
     {
+        test = report.createTest("Select Shirt");
         driver.get("https://www.ajio.com");
         HomePage homePage = new HomePage(driver);
         homePage.clickOnSearch();
@@ -39,13 +64,14 @@ public class AjioTest {
 
         homePage.clickOnBoys();
         homePage.clickOnShirtsCb();
-
+        test.log(Status.PASS, "Reached on Home Page");
 
         String itemsCountTxt = homePage.getItemsCountTxt();
         int count = getIntFromString(itemsCountTxt);
 
         System.out.println("Total shirts found : "+count);
 
+        test.log(Status.PASS, "Total shirts found : "+count);
         List<WebElement> offerPriceList = homePage.getListOfferPrice();
 
         //Assigning maximum integer value
@@ -65,6 +91,7 @@ public class AjioTest {
     @Test
     public void openShirtNewWindow()
     {
+        test = report.createTest("Open New window");
         driver.get("https://www.ajio.com");
         HomePage homePage = new HomePage(driver);
         homePage.clickOnSearch();
@@ -115,7 +142,26 @@ public class AjioTest {
 
     @AfterTest
     public void tearDown() {
+
+//        if(result.isSuccess())
+//            test.log(Status.PASS, "In after method");
+
         driver.close();
         driver.quit();
+        report.flush();
+    }
+
+    @AfterMethod
+    public void takeScreenshot(ITestResult iTestResult)
+    {
+        if(iTestResult.isSuccess())
+        {
+            test.log(Status.PASS, "in pass");
+        }
+        else
+        {
+            test.log(Status.FAIL, "in Fail");
+        }
+
     }
 }

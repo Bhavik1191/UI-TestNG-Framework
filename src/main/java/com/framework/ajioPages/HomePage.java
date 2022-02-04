@@ -58,6 +58,9 @@ public class HomePage {
     public void clickOnBoys()
     {
         driver.findElement(By.xpath("//input[@id='Boys']/following-sibling::label")).click();
+
+        //WebElement element = driver.findElement(By.id("Boys").hashCode();
+
     }
 
     public void clickOnShirtsCb()
